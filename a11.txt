@@ -1,0 +1,152 @@
+ifconfig  (check ip address of server machine)
+
+rpm -q httpd (check httpd is installed or not)
+
+cd /var/www   (indexpage in this directory)
+ls
+cd html
+ls
+
+vi index.html   (configuration file of index.html)
+
+<html>
+<head>
+<title> Apache webserver </title>
+</head>
+<body>
+this is Linux server administration practical
+</body>
+</html>
+
+cd /etc/httpd/conf   (copy directory of httpd/conf)
+ls
+cp httpd.conf httpd.conf.sample
+
+vi httpd.conf
+
+<VirtualHost 10.0.0.100:80>
+ServerAdmin root@www.student.com
+DocumentRoot /var/www/html
+ServerName www.student.com
+ErrorLog logs/studenr.com-error_log
+customLog logs/student.com-access_log common
+</VirtualHost>
+
+IncludeOptional conf.d/*.conf
+
+
+systemctl restart httpd
+systemctl status httpd
+systemctl stop firewalld
+
+systemctl restart named
+
+(open firefox and type http://www.student.com)
+
+b) 
+
+yum install crypto-utils
+yum install mod_ssl
+
+genkey --days 365 www.student.com
+
+next
+2048
+no
+
+IN
+MAHARASHTRA
+DOMBIVALI
+MODEL
+ITCS
+www.student.com
+
+[root@tycs-server conf.d] # vi ssl.conf
+
+<VirtualHost 10.0.0.100:443>
+
+#General setup for the virtual host, inherited from global configuration
+DocumentRoot "/var/www/html"
+ServerName www.student.com:443
+
+#Use separate log files for the SSL virtual host; note that LogLevel
+#is not inherited form httpd.conf.
+ErrorLog logs/ssl_error_log
+Transferlog logs/ssl_access_log
+LogLevel warn
+
+#SSL Engine Switch:
+#Enable/Disable SSL for this virtual host.
+SSLEngine on
+
+# SSL Protocol support:
+# List the enable protocol levels with which clients will be able to
+# connect. Disable SSLv2 access by default:
+SSLProtocol all -SSLv2
+
+#  SSL Cipher Suite:
+
+#Server Certificate:
+#Point SSLCertificateFiel at a PEM encoded certificate. If
+#the certificate is encrypted, then you will be prompted for a 
+#pass phrase. Note that a kill -HUP  will prompt again . A new
+#certificate can be generated using the genkey(1) command.
+SSLCertificateFile /etc/pki/tls/certs/www.student.com.crt
+
+#Server Private Key:
+#If the key is not combined with the certificate, use this 
+#directive to point at the key file. keep in mind that if
+#you've both a RSA and a DSA  private key you can configure
+#both in parallel (to also allow the use of DSA ciphers, etc.)
+SSLCertificateKeyFile /etc/pki/tls/private/www.student.com.key
+
+
+systemctl restart httpd
+systemctl status httpd
+systemctl stop firewalld
+
+
+(go to firefox and type https://www.student.com/)
+
+(go to add exception )
+
+(type in location : https://www.student.com/ and click get certificate)
+
+(go to firefox and type https://www.student.com/)
+
+cd /etc/httpd/conf
+ls
+vi httpd.conf
+
+(write it in)
+AllowOverride AuthConfig
+
+
+htpasswd -c /etc/httpd/.htpasswd tycs101
+(new password:redhat)
+
+htpasswd /etc/httpd/.htpasswd tycs201
+(new password:redhat)
+
+
+cat /etc/httpd/.htpasswd
+
+vi var/www/html/.htaccess
+
+AuthType Basic
+AuthName "Restricted content"
+AuthUserFile /etc/httpd/.htpasswd
+Require valid-user
+
+systemctl restart httpd
+systemctl status httpd
+systemctl stop firewalld
+
+(go to firefox and type https://www.student.com/)
+
+(enter user name and passward)
+
+
+
+
+
